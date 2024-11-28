@@ -5,19 +5,16 @@ import requests
 import signal
 import sys
 
-# Constants
 DATABASE = "weather.db"
 TABLE_NAME = "weather_data"
 URL = 'https://meteopost.com/city/5688/'
 
-# Signal handler for stopping the program
 def signal_handler(sig, frame):
     print("Program stopped.")
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
 
-# Create or connect to SQLite database
 def create_database():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
@@ -31,7 +28,6 @@ def create_database():
     conn.commit()
     conn.close()
 
-# Insert data into the database
 def insert_data(temperature):
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
@@ -42,7 +38,6 @@ def insert_data(temperature):
     conn.commit()
     conn.close()
 
-# Parse weather data from the website
 def parse_weather():
     try:
         response = requests.get(URL)
@@ -52,7 +47,7 @@ def parse_weather():
             for temp_element in temperature_elements:
                 temperature = temp_element.text.strip().replace('°', '').replace('C', '').replace(',', '.')
                 print(f"Temperature: {temperature}°C")
-                break  # Only take the first temperature found
+                break 
         else:
             print(f"Error: Received status code {response.status_code}")
     except Exception as e:
